@@ -1,6 +1,6 @@
 {
   "name": "dom-anchor-textposition",
-  "version": "0.0.0-dev1",
+  "version": "0.0.0-dev2",
   "description": "A DOM Anchoring Framework plugin that implements TextPositionSelector",
   "main": "lib/textposition.js",
   "repository": {
@@ -8,6 +8,7 @@
     "url": "https://github.com/csillag/dom-anchor-textposition"
   },
   "dependencies": {
+    "xpath-range": "0.0.2-dev02"
   },
   "devDependencies": {
     "browser-resolve": "~1.2.1",
