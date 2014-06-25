@@ -18,6 +18,9 @@ class TextPositionSelectorCreator
     else
       selection.range
 
+    # Do we have d-t-m catabilitities?
+    return [] unless state.getStartInfoForNode
+
     # TODO: move to the now API, with getStartOffsetForNode
     startOffset = (state.getStartInfoForNode r.start).start
     endOffset = (state.getEndInfoForNode r.end).end
