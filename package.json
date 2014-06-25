@@ -8,6 +8,7 @@
     "url": "https://github.com/csillag/dom-anchor-textposition"
   },
   "dependencies": {
+    "es6-promise": "~0.1.1",
     "xpath-range": "0.0.2-dev02"
   },
   "devDependencies": {
