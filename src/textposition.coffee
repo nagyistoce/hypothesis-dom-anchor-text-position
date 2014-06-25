@@ -1,6 +1,6 @@
 Range = require("xpath-range").Range
 
-class TextPositionSelectorCreator
+class SelectorCreator
 
   name: "TextPositionSelector from text range (either raw or magic)"
 
@@ -31,4 +31,4 @@ class TextPositionSelectorCreator
     end: endOffset
 
 module.exports =
-  creator: TextPositionSelectorCreator
+  creator: SelectorCreator
