@@ -81,7 +81,7 @@ class AnchoringStrategy
 
   # If there was a corpus change, verify that the text
   # is still the same.
-  _verifyAnchor: (anchor, reason, data) =>
+  verifyAnchor: (anchor, reason, data) =>
     # We don't care until the corpus has changed
     return true unless reason is "corpus change"
 
