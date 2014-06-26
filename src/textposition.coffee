@@ -1,7 +1,7 @@
 Range = require("xpath-range").Range
 Promise = require('es6-promise').Promise
 
-class SelectorCreator
+class TextPositionSelectorCreator
 
   name: "TextPositionSelector from text range (either raw or magic)"
 
@@ -32,7 +32,7 @@ class SelectorCreator
     start: startOffset
     end: endOffset
 
-class AnchoringStrategy
+class PositionBasedAnchoringStrategy
 
   configure: (@manager) ->
 
@@ -43,16 +43,20 @@ class AnchoringStrategy
   # Create an anchor using the saved TextPositionSelector.
   # The quote is verified.
   createAnchor: (selectors) =>
-
-    # This strategy depends on dom-text-mapper functionality
-    return null unless @manager._document._getStartInfoForNode?
-
-    # We need the TextPositionSelector
-    selector = @manager._findSelector selectors, "TextPositionSelector"
-
-    return null unless selector
-
     new Promise (resolve, reject) =>
+
+      # This strategy depends on dom-text-mapper functionality
+      unless @manager._document._getStartInfoForNode?
+        reject "Document does not have d-t-m capatibilities"
+        return
+
+      # We need the TextPositionSelector
+      selector = @manager._findSelector selectors, "TextPositionSelector"
+
+      unless selector
+        reject "No TextPositionSelector found"
+        return
+
       # Get the d-t-m in a consistent state
       @manager._document.prepare("anchoring").then (s) =>
         # When the d-t-m is ready, do this
@@ -97,5 +101,5 @@ class AnchoringStrategy
         resolve (currentQuote is anchor.quote)
 
 module.exports =
-  creator: SelectorCreator
-  strategy: AnchoringStrategy
+  creator: TextPositionSelectorCreator
+  strategy: PositionBasedAnchoringStrategy
