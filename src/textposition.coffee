@@ -40,10 +40,12 @@ class AnchoringStrategy
 
   priority: 50
 
+  # Create an anchor using the saved TextPositionSelector.
+  # The quote is verified.
   createAnchor: (selectors) =>
 
     # This strategy depends on dom-text-mapper functionality
-    return null unless @manager.domMapper._getStartInfoForNode?
+    return null unless @manager._document._getStartInfoForNode?
 
     # We need the TextPositionSelector
     selector = @manager._findSelector selectors, "TextPositionSelector"
@@ -52,7 +54,7 @@ class AnchoringStrategy
 
     new Promise (resolve, reject) =>
       # Get the d-t-m in a consistent state
-      @manager.domMapper.prepare("anchoring").then (s) =>
+      @manager._document.prepare("anchoring").then (s) =>
         # When the d-t-m is ready, do this
 
         content = s.getCorpus()[ selector.start ... selector.end ].trim()
@@ -77,7 +79,22 @@ class AnchoringStrategy
           endPage: s.getPageIndexForPos selector.end
           quote: currentQuote
 
-#  verify: @_verifyPositionAnchor
+  # If there was a corpus change, verify that the text
+  # is still the same.
+  _verifyAnchor: (anchor, reason, data) =>
+    # We don't care until the corpus has changed
+    return true unless reason is "corpus change"
+
+    new Promise (resolve, reject) =>
+      # Prepare d-t-m for action
+      @manager._document.prepare("verifying an anchor").then (s) =>
+        # Get the current quote
+        corpus = s.getCorpus()
+        content = corpus[ anchor.start ... anchor.end ].trim()
+        currentQuote = @manager._normalizeString content
+
+        # Compare it with the stored one
+        resolve (currentQuote is anchor.quote)
 
 module.exports =
   creator: SelectorCreator
