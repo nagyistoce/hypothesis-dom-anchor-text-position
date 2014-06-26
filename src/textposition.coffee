@@ -46,38 +46,36 @@ class AnchoringStrategy
     return null unless @manager.domMapper._getStartInfoForNode?
 
     # We need the TextPositionSelector
-    selector = @manager.findSelector selectors, "TextPositionSelector"
+    selector = @manager._findSelector selectors, "TextPositionSelector"
 
-    return unless selector
-      null # no TextPositionSelector found"
-    else
-      new Promise (resolve, reject) =>
-        # Get the d-t-m in a consistent state
-        @manager.domMapper.prepare("anchoring").then (s) =>
-          # When the d-t-m is ready, do this
+    return null unless selector
 
-          content = s.getCorpus()[ selector.start ... selector.end ].trim()
-          currentQuote = @manager.normalizeString content
-          savedQuote = @manager.getQuoteForTarget? target
+    new Promise (resolve, reject) =>
+      # Get the d-t-m in a consistent state
+      @manager.domMapper.prepare("anchoring").then (s) =>
+        # When the d-t-m is ready, do this
 
-          if savedQuote? and currentQuote isnt savedQuote
-            # We have a saved quote, let's compare it to current content
-            #console.log "Could not apply position selector" +
-            #  " [#{selector.start}:#{selector.end}] to current document," +
-            #  " because the quote has changed. " +
-            #  "(Saved quote is '#{savedQuote}'." +
-            #  " Current quote is '#{currentQuote}'.)"
-            reject "the saved quote doesn't match"
-            return
+        content = s.getCorpus()[ selector.start ... selector.end ].trim()
+        currentQuote = @manager._normalizeString content
+        savedQuote = @manager._getQuoteForSelectors? selectors
 
-          # Create a TextPositionAnchor from this data
-          resolve
-            type: "text position"
-            start: selector.start
-            end: selector.end
-            startPage: s.getPageIndexForPos selector.start
-            endPage: s.getPageIndexForPos selector.end
-            quote: currentQuote
+        if savedQuote? and currentQuote isnt savedQuote
+          # We have a saved quote, let's compare it to current content
+          #console.log "Could not apply position selector" +
+          #  " [#{selector.start}:#{selector.end}] to current document," +
+          #  " because the quote has changed. " +
+          #  "(Saved quote is '#{savedQuote}'." +
+          #  " Current quote is '#{currentQuote}'.)"
+          reject "the saved quote doesn't match"
+
+        # Create a TextPositionAnchor from this data
+        resolve
+          type: "text position"
+          start: selector.start
+          end: selector.end
+          startPage: s.getPageIndexForPos selector.start
+          endPage: s.getPageIndexForPos selector.end
+          quote: currentQuote
 
 #  verify: @_verifyPositionAnchor
 
