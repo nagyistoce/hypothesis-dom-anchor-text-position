@@ -1,11 +1,11 @@
 {
-  "name": "dom-anchor-textposition",
+  "name": "dom-anchor-text-position",
   "version": "0.0.0-dev3",
   "description": "A DOM Anchoring Framework plugin that implements TextPositionSelector",
   "main": "lib/textposition.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hypothesis/dom-anchor-textposition"
+    "url": "https://github.com/hypothesis/dom-anchor-text-position"
   },
   "dependencies": {
     "es6-promise": "~0.1.1",
